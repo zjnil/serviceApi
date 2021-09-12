@@ -1,19 +1,16 @@
 package com.service.service.util
 
+import jdk.nashorn.internal.ir.annotations.Ignore
 import org.springframework.expression.AccessException
 
 // TODO: Add tests
 class ValidationResultWrapper<T>() {
     private var validationResultVal: T? = null
-    private val errors = mutableListOf<String>()
-
-    fun addError(error: String) {
-        this.errors.add(error)
-    }
+    private val errorsInt = mutableListOf<String>()
 
     var validationResult: T
         get() {
-            if (this.errors.size > 0) {
+            if (this.errorsInt.size > 0) {
                 throw AccessException("Access to the result is not possible in this state")
             }
 
@@ -23,7 +20,31 @@ class ValidationResultWrapper<T>() {
             this.validationResultVal = validationResult
         }
 
-    fun absorbErrors(vrw: ValidationResultWrapper<Any>) {
-        this.errors.addAll(vrw.errors)
+    val errors: MutableList<String>
+        get() {
+            return this.errorsInt
+        }
+
+    /**
+     * Add error to errors list.
+     * @param error Error to add
+     */
+    fun addError(error: String) {
+        this.errorsInt.add(error)
+    }
+
+    /**
+     * Absorb problems from given ValidationResultWrapper.
+     * @param vrw Another instance of ValidationResultWrapper
+     */
+    fun absorb(vrw: ValidationResultWrapper<*>) {
+        this.errorsInt.addAll(vrw.errorsInt)
+    }
+
+    /**
+     * Return true if errors are present.
+     */
+    fun hasErrors(): Boolean {
+        return this.errorsInt.size > 0
     }
 }

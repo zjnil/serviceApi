@@ -4,6 +4,7 @@ plugins {
 	kotlin("plugin.jpa") version "1.4.32"
 	id("org.springframework.boot") version "2.5.4"
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
+	id("org.unbroken-dome.test-sets") version "4.0.0"
 	kotlin("jvm") version "1.5.21"
 	kotlin("plugin.spring") version "1.5.21"
 }
@@ -32,6 +33,7 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+	implementation("org.ktorm:ktorm-core:3.4.1")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
@@ -46,7 +48,26 @@ tasks.withType<KotlinCompile> {
 		jvmTarget = "1.8"
 	}
 }
+/*
+testSets {
+	integrationTest { dirName = "integration" }
+}
 
+// Integration tests must run after unit tests
+integrationTest.mustRunAfter test
+
+integrationTest {
+	useJUnitPlatform {
+		includeTags = "integrationTest"
+	}
+}
+
+test {
+	useJUnitPlatform {
+		includeTags = "unitTest"
+	}
+}
+*/
 tasks.withType<Test> {
 	useJUnitPlatform()
 }

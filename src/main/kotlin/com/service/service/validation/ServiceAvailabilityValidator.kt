@@ -1,6 +1,13 @@
 package com.service.service.validation
 
+import com.service.service.DatabaseSingleton
+import com.service.service.model.User
+import com.service.service.model.UserTable
 import com.service.service.util.ValidationResultWrapper
+import org.ktorm.dsl.asIterable
+import org.ktorm.dsl.from
+import org.ktorm.dsl.limit
+import org.ktorm.dsl.select
 import java.util.*
 
 class ServiceAvailabilityValidator {
@@ -15,7 +22,14 @@ class ServiceAvailabilityValidator {
         userId: String,
         countryCode: String
     ): ValidationResultWrapper<ServiceAvailabilityValidationResult> {
-        throw NotImplementedError()
+        val vrw = ValidationResultWrapper<ServiceAvailabilityValidationResult>()
+        val timeZoneVrw = this.validateTimeZone(timeZone)
+        vrw.absorb(timeZoneVrw)
+        val userIdVrw = this.validateUserId(userId)
+        vrw.absorb(userIdVrw)
+        val ccVrw = this.validateCountryCode(countryCode)
+        vrw.absorb(ccVrw)
+        return vrw
     }
 
     private fun validateTimeZone(timeZone: String): ValidationResultWrapper<TimeZone> {
@@ -30,8 +44,17 @@ class ServiceAvailabilityValidator {
         return vrw
     }
 
-    private fun validateUserId(userId: String) {
-        throw NotImplementedError()
+    private fun validateUserId(userId: String): ValidationResultWrapper<User> {
+        val vrw = ValidationResultWrapper<User>()
+        val database = DatabaseSingleton().database
+        val user = database.from(UserTable).select().limit(1).asIterable().firstOrNull() as User?
+        if (user === null) {
+            vrw.addError("Provided user ID does not exist: $userId")
+            return vrw
+        }
+
+        vrw.validationResult = user
+        return vrw
     }
 
     private fun validateCountryCode(countryCode: String): ValidationResultWrapper<Locale> {

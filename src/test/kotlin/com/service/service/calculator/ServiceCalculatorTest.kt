@@ -2,11 +2,13 @@ package com.service.service.calculator
 
 import org.apache.tomcat.jni.Local
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.ZoneOffset
 import java.util.*
 
+@Tag("unitTest")
 internal class ServiceCalculatorTest {
     @Test
     fun isMultiplayerEnabled() {
