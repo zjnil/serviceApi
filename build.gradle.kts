@@ -37,9 +37,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.8")
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.boot:spring-boot-starter-test:2.5.4")
 	testImplementation("io.projectreactor:reactor-test")
 	testImplementation("io.insert-koin:koin-test:3.1.2")
+	testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+	testImplementation("com.github.tomakehurst:wiremock:2.19.0")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 }
 
 tasks.withType<KotlinCompile> {
@@ -48,26 +51,7 @@ tasks.withType<KotlinCompile> {
 		jvmTarget = "1.8"
 	}
 }
-/*
-testSets {
-	integrationTest { dirName = "integration" }
-}
 
-// Integration tests must run after unit tests
-integrationTest.mustRunAfter test
-
-integrationTest {
-	useJUnitPlatform {
-		includeTags = "integrationTest"
-	}
-}
-
-test {
-	useJUnitPlatform {
-		includeTags = "unitTest"
-	}
-}
-*/
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
